@@ -1,0 +1,18 @@
+{
+  "Group": "Buuz135",
+  "Name": "AdvancedItemInfo",
+  "Version": "1.0.0",
+  "Description": "Adds a command to open a GUI with all the items in the game and their info",
+  "Authors": [
+    {
+      "Name": "Buuz135"
+    }
+  ],
+  "Website": "website",
+  "ServerVersion": "*",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "com.buuz135.advancediteminfo.Main",
+  "IncludesAssetPack": true
+}
