@@ -10,7 +10,9 @@
   ],
   "Website": "website",
   "ServerVersion": "*",
-  "Dependencies": {},
+  "Dependencies": {
+    "Hytale:EntityModule": "*"
+  },
   "OptionalDependencies": {},
   "DisabledByDefault": false,
   "Main": "com.buuz135.advancediteminfo.Main",

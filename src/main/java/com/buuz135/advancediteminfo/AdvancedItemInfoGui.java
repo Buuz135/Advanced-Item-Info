@@ -23,7 +23,9 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import javax.annotation.Nonnull;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInfoGui.SearchGuiData> {
 
@@ -129,34 +131,34 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
                     Message.raw("\n"),
                     Message.translation(item.getTranslationKey())));*/
 
-            var tooltip = I18nModule.get().getMessage(this.playerRef.getLanguage(), item.getTranslationKey());
-            var separator = "--------------------------";
-            tooltip = addTooltipLine(tooltip, separator);
-            tooltip = addTooltipLine(tooltip, "ID: " + entry.getKey());
-            tooltip = addTooltipLine(tooltip, "Icon: " + item.getIcon());
-            tooltip = addTooltipLine(tooltip, "Quality: " + item.getQualityIndex());
-            tooltip = addTooltipLine(tooltip, "Item Level: " + item.getItemLevel());
-            tooltip = addTooltipLine(tooltip, "Max Stack: " + item.getMaxStack());
-            tooltip = addTooltipLine(tooltip, "Max Durability: " + item.getMaxDurability());
-            tooltip = addTooltipLine(tooltip, "Is Consumable: " + formatBoolean(item.isConsumable()));
-            tooltip = addTooltipLine(tooltip, "Has Block: " + formatBoolean(item.hasBlockType()));
-            tooltip = addTooltipLine(tooltip, "Fuel Quality: " + item.getFuelQuality());
-            tooltip = addTooltipLine(tooltip, separator);
-            tooltip = addTooltipLine(tooltip, "Is Tool: " + formatBoolean(item.getTool() != null));
-            tooltip = addTooltipLine(tooltip, "Is Weapon: " + formatBoolean(item.getWeapon() != null));
-            tooltip = addTooltipLine(tooltip, "Is Armor: " + formatBoolean(item.getArmor() != null));
-            tooltip = addTooltipLine(tooltip, "Is Glider: " + formatBoolean(item.getGlider() != null));
-            tooltip = addTooltipLine(tooltip, "Is Utility: " + formatBoolean(item.getUtility() != null));
-            tooltip = addTooltipLine(tooltip, "Is Portal Key: " + formatBoolean(item.getPortalKey() != null));
+            var tooltip = MessageHelper.multiLine();
+            tooltip.append(Message.translation(item.getTranslationKey()).bold(true)).nl();
+            tooltip.separator();
+            tooltip = addTooltipLine(tooltip, "ID: " , entry.getKey());
+            tooltip = addTooltipLine(tooltip, "Icon: " , item.getIcon());
+            tooltip = addTooltipLine(tooltip, "Quality: " , item.getQualityIndex());
+            tooltip = addTooltipLine(tooltip, "Item Level: " , item.getItemLevel());
+            tooltip = addTooltipLine(tooltip, "Max Stack: " , item.getMaxStack());
+            tooltip = addTooltipLine(tooltip, "Max Durability: " , item.getMaxDurability());
+            tooltip = addTooltipLine(tooltip, "Is Consumable: " , formatBoolean(item.isConsumable()));
+            tooltip = addTooltipLine(tooltip, "Has Block: " , formatBoolean(item.hasBlockType()));
+            tooltip = addTooltipLine(tooltip, "Fuel Quality: " , item.getFuelQuality());
+            tooltip = tooltip.separator();
+            tooltip = addTooltipLine(tooltip, "Is Tool: " , formatBoolean(item.getTool() != null));
+            tooltip = addTooltipLine(tooltip, "Is Weapon: " , formatBoolean(item.getWeapon() != null));
+            tooltip = addTooltipLine(tooltip, "Is Armor: " , formatBoolean(item.getArmor() != null));
+            tooltip = addTooltipLine(tooltip, "Is Glider: " , formatBoolean(item.getGlider() != null));
+            tooltip = addTooltipLine(tooltip, "Is Utility: " , formatBoolean(item.getUtility() != null));
+            tooltip = addTooltipLine(tooltip, "Is Portal Key: " , formatBoolean(item.getPortalKey() != null));
             if (Main.recipeRegistries.containsKey(entry.getKey())) {
-                tooltip = addTooltipLine(tooltip, separator);
-                tooltip = addTooltipLine(tooltip, "Can Be Made In:");
+                tooltip = tooltip.separator();
+                tooltip = addTooltipLine(tooltip, "Can Be Made In:" ,"");
                 List<String> addedRecipes = new ArrayList<>();
                 for (CraftingRecipe.BenchRequirement[] value : Main.recipeRegistries.get(entry.getKey()).values()) {
                     for (CraftingRecipe.BenchRequirement benchRequirement : value) {
                         var customId = benchRequirement.id + benchRequirement.requiredTierLevel;
                         if (!addedRecipes.contains(customId)) {
-                            tooltip = addTooltipLine(tooltip, " - " + formatBench(benchRequirement.id) + " Tier " + benchRequirement.requiredTierLevel);
+                            tooltip = addTooltipLine(tooltip, " - " , formatBench(benchRequirement.id) + " Tier " + benchRequirement.requiredTierLevel);
                             addedRecipes.add(customId);
                         }
                     }
@@ -164,7 +166,7 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
             }
 
 
-            commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "].TooltipText", tooltip);
+            commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "].TooltipTextSpans", tooltip.build());
             commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "] #ItemIcon.ItemId", entry.getKey());
             commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "] #ItemName.TextSpans", Message.translation(item.getTranslationKey()));
             //commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "] #SubcommandUsage.TextSpans", this.getSimplifiedUsage(item, playerComponent));
@@ -180,12 +182,24 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
         //commandBuilder.set("#BackButton.Visible", !this.subcommandBreadcrumb.isEmpty());
     }
 
-    private String addTooltipLine(String tooltip, String line) {
-        return tooltip + "\n" + line;
+    private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, int value) {
+        return this.addTooltipLine(tooltip, key, value + "");
     }
 
-    private String formatBoolean(boolean value){
-        return value ? "Yes" : "No";
+    private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, double value) {
+        return this.addTooltipLine(tooltip, key, value + "");
+    }
+
+    private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, String value) {
+        return tooltip.append(Message.raw(key).color("#93844c").bold(true)).append(Message.raw(value)).nl();
+    }
+
+    private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, Message value) {
+        return tooltip.append(Message.raw(key).color("#93844c").bold(true)).append(value).nl();
+    }
+
+    private Message formatBoolean(boolean value){
+        return value ? Message.raw("Yes").color(Color.GREEN) : Message.raw("No").color(Color.RED);
     }
 
     private String formatBench(String name){
