@@ -39,7 +39,7 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
 
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder uiCommandBuilder, @Nonnull UIEventBuilder uiEventBuilder, @Nonnull Store<EntityStore> store) {
-        uiCommandBuilder.append("Pages/AdvancedItemInfoGui.ui");
+        uiCommandBuilder.append("Pages/Buuz135_AdvancedItemInfo_Gui.ui");
         uiCommandBuilder.set("#SearchInput.Value", this.searchQuery);
         uiEventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchInput", EventData.of("@SearchQuery", "#SearchInput.Value"), false);
         this.buildList(ref, uiCommandBuilder, uiEventBuilder, store);
@@ -124,7 +124,7 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
                 commandBuilder.appendInline("#SubcommandCards", "Group { LayoutMode: Left; Anchor: (Bottom: 0); }");
             }
 
-            commandBuilder.append("#SubcommandCards[" + rowIndex + "]", "Pages/AIFGSearchItemIcon.ui");
+            commandBuilder.append("#SubcommandCards[" + rowIndex + "]", "Pages/Buuz135_AdvancedItemInfo_SearchItemIcon.ui");
 
             /*commandBuilder.set("#SubcommandCards[" + rowIndex + "][" + cardsInCurrentRow + "].TooltipText", Message.join(
                     Message.translation(item.getTranslationKey()),
