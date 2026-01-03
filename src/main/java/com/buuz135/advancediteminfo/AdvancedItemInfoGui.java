@@ -6,9 +6,10 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.BenchRequirement;
 import com.hypixel.hytale.protocol.CraftingRecipe;
-import com.hypixel.hytale.protocol.CustomPageLifetime;
-import com.hypixel.hytale.protocol.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
+import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.command.system.MatchResult;
@@ -154,8 +155,8 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
                 tooltip = tooltip.separator();
                 tooltip = addTooltipLine(tooltip, "Can Be Made In:" ,"");
                 List<String> addedRecipes = new ArrayList<>();
-                for (CraftingRecipe.BenchRequirement[] value : Main.recipeRegistries.get(entry.getKey()).values()) {
-                    for (CraftingRecipe.BenchRequirement benchRequirement : value) {
+                for (BenchRequirement[] value : Main.recipeRegistries.get(entry.getKey()).values()) {
+                    for (BenchRequirement benchRequirement : value) {
                         var customId = benchRequirement.id + benchRequirement.requiredTierLevel;
                         if (!addedRecipes.contains(customId)) {
                             tooltip = addTooltipLine(tooltip, " - " , formatBench(benchRequirement.id) + " Tier " + benchRequirement.requiredTierLevel);

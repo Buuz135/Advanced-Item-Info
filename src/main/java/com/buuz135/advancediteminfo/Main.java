@@ -5,6 +5,7 @@ package com.buuz135.advancediteminfo;
 import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
 import com.hypixel.hytale.assetstore.event.RemovedAssetsEvent;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.protocol.BenchRequirement;
 import com.hypixel.hytale.server.core.asset.type.item.config.CraftingRecipe;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.inventory.MaterialQuantity;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class Main extends JavaPlugin {
 
     public static Map<String, Item> ITEMS = new HashMap<>();
-    public static final Map<String, Map<String, com.hypixel.hytale.protocol.CraftingRecipe.BenchRequirement[]>> recipeRegistries = new Object2ObjectOpenHashMap();
+    public static final Map<String, Map<String, BenchRequirement[]>> recipeRegistries = new Object2ObjectOpenHashMap();
 
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
