@@ -2,6 +2,7 @@ package com.buuz135.advancediteminfo;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -36,6 +37,7 @@ public class OpenAdvancedInfoCommand extends AbstractCommand {
             }
         };
         this.argument = this.withOptionalArg("s", "Searches items that have this name", arg);
+        this.setPermissionGroup(GameMode.Adventure);
     }
 
 
@@ -44,21 +46,6 @@ public class OpenAdvancedInfoCommand extends AbstractCommand {
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
         if (sender instanceof Player player) {
-            /*
-            var blocktype = player.getWorld().getState(322,121,-1343, true);
-            if (blocktype instanceof ItemContainerState containerState) {
-                var inventory = containerState.getItemContainer();
-                for (short i = 0; i < inventory.getCapacity(); i++) {
-                    var stack = inventory.getItemStack(i);
-                    if (stack != null && !stack.isEmpty()) {
-                        System.out.println("Slot " + i + " " + inventory.getItemStack(i).toString());
-                    }
-                }
-            }
-             */
-            /*for (Map.Entry<PluginIdentifier, PluginManifest> set : PluginManager.get().getAvailablePlugins().entrySet()) {
-                System.out.println(set.getValue().getName());
-            }*/
             Ref<EntityStore> ref = player.getReference();
             if (ref != null && ref.isValid()) {
                 Store<EntityStore> store = ref.getStore();
