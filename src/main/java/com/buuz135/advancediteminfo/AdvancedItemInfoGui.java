@@ -12,6 +12,7 @@ import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemDropList;
 import com.hypixel.hytale.server.core.command.system.MatchResult;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
@@ -163,6 +164,25 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
                             addedRecipes.add(customId);
                         }
                     }
+                }
+            }
+            if (Main.dropRegistries.containsKey(entry.getKey())) {
+                tooltip = tooltip.separator();
+                tooltip = addTooltipLine(tooltip, "Dropped by:" ,"");
+                String droppedByBuffer = "";
+                int bufferLength = 0;
+                // for(int i = 0; i <Main.dropRegistries.size(); i++) {}
+                for (String droppedBy: Main.dropRegistries.get(entry.getKey())) {
+                    droppedByBuffer = droppedByBuffer + droppedBy + ", ";
+                    bufferLength += 1;
+                    if (bufferLength > 2) {
+                        tooltip = addTooltipLine(tooltip, " - ", droppedByBuffer);
+                        droppedByBuffer = "";
+                        bufferLength = 0;
+                    }
+                } 
+                if (bufferLength > 0) {
+                    tooltip = addTooltipLine(tooltip, " - ", droppedByBuffer);
                 }
             }
 
