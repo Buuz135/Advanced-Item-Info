@@ -169,9 +169,21 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
             if (Main.dropRegistries.containsKey(entry.getKey())) {
                 tooltip = tooltip.separator();
                 tooltip = addTooltipLine(tooltip, "Dropped by:" ,"");
-                for(String droppedBy: Main.dropRegistries.get(entry.getKey())) {
-                    tooltip = addTooltipLine(tooltip, " - ", droppedBy);
+                String droppedByBuffer = "";
+                int bufferLength = 0;
+                // for(int i = 0; i <Main.dropRegistries.size(); i++) {}
+                for (String droppedBy: Main.dropRegistries.get(entry.getKey())) {
+                    droppedByBuffer = droppedByBuffer + droppedBy + ", ";
+                    bufferLength += 1;
+                    if (bufferLength > 2) {
+                        tooltip = addTooltipLine(tooltip, " - ", droppedByBuffer);
+                        droppedByBuffer = "";
+                        bufferLength = 0;
+                    }
                 } 
+                if (bufferLength > 0) {
+                    tooltip = addTooltipLine(tooltip, " - ", droppedByBuffer);
+                }
             }
 
 
