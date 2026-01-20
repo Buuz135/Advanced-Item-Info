@@ -4,6 +4,29 @@ plugins {
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.3'
 }
 
+import org.gradle.internal.os.OperatingSystem
+
+ext {
+    if (project.hasProperty('hytale_home')) {
+        hytaleHome = project.findProperty('hytale_home')
+    }
+    else {
+        def os = OperatingSystem.current()
+        if (os.isWindows()) {
+            hytaleHome = "${System.getProperty("user.home")}/AppData/Roaming/Hytale"
+        }
+        else if (os.isMacOsX()) {
+            hytaleHome = "${System.getProperty("user.home")}/Library/Application Support/Hytale"
+        }
+        else if (os.isLinux()) {
+            hytaleHome = "${System.getProperty("user.home")}/.var/app/com.hypixel.HytaleLauncher/data/Hytale"
+            if (!file(hytaleHome).exists()) {
+                hytaleHome = "${System.getProperty("user.home")}/.local/share/Hytale"
+            }
+        }
+    }
+}
+
 version = project.version;
 
 java {
@@ -23,7 +46,7 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation(files(System.getProperty("user.home") + "/.var/app/com.hypixel.HytaleLauncher/data/Hytale/install/release/package/game/latest/Server/HytaleServer.jar"))
+    implementation(files("$hytaleHome/install/release/package/game/latest/Server/HytaleServer.jar"))
 }
 
 test {
