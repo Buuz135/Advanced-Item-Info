@@ -1,14 +1,12 @@
 package com.buuz135.advancediteminfo;
 
-
-
-import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
 import com.hypixel.hytale.assetstore.event.RemovedAssetsEvent;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.protocol.BenchRequirement;
 import com.hypixel.hytale.server.core.asset.type.item.config.CraftingRecipe;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemDropList;
+import com.hypixel.hytale.server.core.asset.type.item.config.container.ItemDropContainer;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemDrop;
 import com.hypixel.hytale.server.core.inventory.MaterialQuantity;
@@ -17,7 +15,6 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,33 +74,23 @@ public class Main extends JavaPlugin {
     }
 
     private static void onDropListLoad(LoadedAssetsEvent<String, ItemDropList, DefaultAssetMap<String, ItemDropList>> event) {
-        // implementation 1
-        Map<String,ItemDropList> assetMap = event.getAssetMap().getAssetMap();
-        for (Entry<String, ItemDropList> entry : assetMap.entrySet()) {
+        for (Entry<String, ItemDropList> entry : event.getLoadedAssets().entrySet()) {
             String dropper = entry.getKey();
             ItemDropList dropList = entry.getValue();
             List<ItemDrop> dropListRaw = new ArrayList<ItemDrop>();
-            dropList.getContainer().getAllDrops(dropListRaw);
-            for(ItemDrop drop : dropListRaw) {
-                String itemId = drop.getItemId();
-                if(!dropRegistries.containsKey(itemId)) {
-                    dropRegistries.put(itemId, new ArrayList<String>());
+            ItemDropContainer container = dropList.getContainer();
+            if (container != null) {
+                container.getAllDrops(dropListRaw);
+                for (ItemDrop drop : dropListRaw) {
+                    String itemId = drop.getItemId();
+                    if (!dropRegistries.containsKey(itemId)) {
+                        dropRegistries.put(itemId, new ArrayList<String>());
+                    }
+                    if (!dropRegistries.get(itemId).contains(dropper)) {
+                        dropRegistries.get(itemId).add(dropper);
+                    }
                 }
-                dropRegistries.get(itemId).add(dropper);
             }
         }
-
-        // implementation 2
-        // for (ItemDropList dropList : event.getLoadedAssets().values()) {
-        //     List<ItemDrop> dropListRaw = new ArrayList<ItemDrop>();
-        //     dropList.getContainer().getAllDrops(dropListRaw);
-        //     for(ItemDrop drop : dropListRaw) {
-        //         String itemId = drop.getItemId();
-        //         if(!dropRegistries.containsKey(itemId)) {
-        //             dropRegistries.put(itemId, new ArrayList<String>());
-        //         }
-        //         dropRegistries.get(itemId).add(dropList.getId());
-        //     }
-        // }
     }
 }
