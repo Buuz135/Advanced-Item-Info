@@ -192,11 +192,11 @@ public class AdvancedItemInfoGui extends InteractiveCustomUIPage<AdvancedItemInf
     }
 
     private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, String value) {
-        return tooltip.append(Message.raw(key).color("#93844c").bold(true)).append(Message.raw(value)).nl();
+        return tooltip.append(Message.raw(key).color("#E8A93B").bold(true)).append(Message.raw(value)).nl();
     }
 
     private MessageHelper.ML addTooltipLine(MessageHelper.ML tooltip, String key, Message value) {
-        return tooltip.append(Message.raw(key).color("#93844c").bold(true)).append(value).nl();
+        return tooltip.append(Message.raw(key).color("#E8A93B").bold(true)).append(value).nl();
     }
 
     private Message formatBoolean(boolean value){

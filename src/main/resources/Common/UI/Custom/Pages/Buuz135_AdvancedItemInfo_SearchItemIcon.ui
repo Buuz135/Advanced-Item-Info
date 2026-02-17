@@ -1,3 +1,5 @@
+$C = "../Common.ui";
+
 Button {
   Anchor: (Width: 131, Bottom: 10, Right: 10);
   Padding: (Full: 12);
@@ -11,6 +13,7 @@ Button {
       Background: #3a3a3a(0.9),
     )
   );
+  TextTooltipStyle: $C.@DefaultTextTooltipStyle;
 
   ItemIcon #ItemIcon {
     Anchor: (Width: 64, Height: 64, Bottom: 5);
