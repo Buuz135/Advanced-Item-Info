@@ -1,27 +1,31 @@
 package com.buuz135.advancediteminfo;
 
-
-
 import com.hypixel.hytale.assetstore.event.LoadedAssetsEvent;
 import com.hypixel.hytale.assetstore.event.RemovedAssetsEvent;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.protocol.BenchRequirement;
 import com.hypixel.hytale.server.core.asset.type.item.config.CraftingRecipe;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemDropList;
+import com.hypixel.hytale.server.core.asset.type.item.config.container.ItemDropContainer;
 import com.hypixel.hytale.server.core.asset.type.item.config.Item;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemDrop;
 import com.hypixel.hytale.server.core.inventory.MaterialQuantity;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Main extends JavaPlugin {
 
     public static Map<String, Item> ITEMS = new HashMap<>();
     public static final Map<String, Map<String, BenchRequirement[]>> recipeRegistries = new Object2ObjectOpenHashMap();
+    public static Map<String, List<String>> dropRegistries = new HashMap<>();
 
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
@@ -34,6 +38,8 @@ public class Main extends JavaPlugin {
         this.getEventRegistry().register(LoadedAssetsEvent.class, Item.class, Main::onItemAssetLoad);
         this.getEventRegistry().register(LoadedAssetsEvent.class, CraftingRecipe.class, Main::onRecipeLoad);
         this.getEventRegistry().register(RemovedAssetsEvent.class, CraftingRecipe.class, Main::onRecipeRemove);
+        this.getEventRegistry().register(LoadedAssetsEvent.class, ItemDropList.class, Main::onDropListLoad);
+
     }
 
     private static void onItemAssetLoad(LoadedAssetsEvent<String, Item, DefaultAssetMap<String, Item>> event) {
@@ -67,4 +73,24 @@ public class Main extends JavaPlugin {
         }
     }
 
+    private static void onDropListLoad(LoadedAssetsEvent<String, ItemDropList, DefaultAssetMap<String, ItemDropList>> event) {
+        for (Entry<String, ItemDropList> entry : event.getLoadedAssets().entrySet()) {
+            String dropper = entry.getKey();
+            ItemDropList dropList = entry.getValue();
+            List<ItemDrop> dropListRaw = new ArrayList<ItemDrop>();
+            ItemDropContainer container = dropList.getContainer();
+            if (container != null) {
+                container.getAllDrops(dropListRaw);
+                for (ItemDrop drop : dropListRaw) {
+                    String itemId = drop.getItemId();
+                    if (!dropRegistries.containsKey(itemId)) {
+                        dropRegistries.put(itemId, new ArrayList<String>());
+                    }
+                    if (!dropRegistries.get(itemId).contains(dropper)) {
+                        dropRegistries.get(itemId).add(dropper);
+                    }
+                }
+            }
+        }
+    }
 }
