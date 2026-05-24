@@ -37,7 +37,7 @@ public class OpenAdvancedInfoCommand extends AbstractCommand {
             }
         };
         this.argument = this.withOptionalArg("s", "Searches items that have this name", arg);
-        this.setPermissionGroup(GameMode.Adventure);
+        this.setPermissionGroups("hytale:Adventurer");
     }
 
 
@@ -45,19 +45,19 @@ public class OpenAdvancedInfoCommand extends AbstractCommand {
     @Override
     protected CompletableFuture<Void> execute(@Nonnull CommandContext context) {
         CommandSender sender = context.sender();
-        if (sender instanceof Player player) {
-            Ref<EntityStore> ref = player.getReference();
+        if (sender instanceof PlayerRef playerRef) {
+            Ref<EntityStore> ref = playerRef.getReference();
             if (ref != null && ref.isValid()) {
                 Store<EntityStore> store = ref.getStore();
                 World world = store.getExternalData().getWorld();
                 return CompletableFuture.runAsync(() -> {
-                    PlayerRef playerRefComponent = store.getComponent(ref, PlayerRef.getComponentType());
+                    Player player = store.getComponent(ref, Player.getComponentType());
                     var defaultSearch = "";
                     if (context.get(this.argument) != null) {
                         defaultSearch = context.get(this.argument);
                     }
-                    if (playerRefComponent != null) {
-                        player.getPageManager().openCustomPage(ref, store, new AdvancedItemInfoGui(playerRefComponent, CustomPageLifetime.CanDismiss, defaultSearch));
+                    if (player != null) {
+                        player.getPageManager().openCustomPage(ref, store, new AdvancedItemInfoGui(playerRef, CustomPageLifetime.CanDismiss, defaultSearch));
 
                     }
                 }, world);
